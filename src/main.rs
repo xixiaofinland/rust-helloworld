@@ -83,42 +83,47 @@ pub fn main() {
     let arena: Arena<'_, ()> = pretty::Arena::new();
 
     // Function example
+    // Function example
     let doc = arena
         .text("function")
         .append(arena.space())
         .append(arena.text("example("))
         .append(
             arena
-                .text("param1,")
+                .softline() // Add softline before param1
+                .append(arena.text("param1,"))
                 .append(arena.line())
                 .append(arena.text("param2,"))
                 .append(arena.line())
                 .append(arena.text("param3"))
-                .nest(2) // Use nest instead of indent for parameters
+                .append(arena.softline())
+                .nest(2)
                 .group(),
         )
-        .append(arena.text(")"))
-        .append(arena.space())
-        .append(arena.text("{"))
         .append(
             arena
-                .line()
-                .append(arena.text("const x = 1;"))
+                .text(")")
+                .append(arena.space())
+                .append(arena.text("{"))
+                .append(
+                    arena
+                        .line()
+                        .append(arena.text("const x = 1;"))
+                        .append(arena.softline())
+                        .append(arena.text("const y = 2;"))
+                        .nest(4)
+                        .group(),
+                )
                 .append(arena.line())
-                .append(arena.text("const y = 2;"))
-                .nest(4) // Use nest for function body
-                .group(),
+                .append(arena.text("}")),
         )
-        .append(arena.line())
-        .append(arena.text("}"))
         .group();
-
     // Array example
     let list_doc = arena
         .text("const items = [")
         .append(
             arena
-                .line()
+                .line_()
                 .append(arena.text("'first item',"))
                 .append(arena.line())
                 .append(arena.text("'second item',"))
@@ -127,19 +132,21 @@ pub fn main() {
                 .nest(2) // Use nest for array items
                 .group(),
         )
-        .append(arena.line())
+        .append(arena.line_())
         .append(arena.text("];"))
         .group();
 
     println!("Width 80:");
-    println!("Function example:");
-    doc.render(80, &mut io::stdout()).unwrap();
     println!("\n\nArray example:");
     list_doc.render(80, &mut io::stdout()).unwrap();
-
     println!("\n\nWidth 20:");
-    println!("Function example:");
-    doc.render(20, &mut io::stdout()).unwrap();
     println!("\n\nArray example:");
     list_doc.render(20, &mut io::stdout()).unwrap();
+
+    //println!("Width 80:");
+    //println!("Function example:");
+    //doc.render(80, &mut io::stdout()).unwrap();
+    //println!("\n\nWidth 20:");
+    //println!("Function example:");
+    //doc.render(20, &mut io::stdout()).unwrap();
 }
