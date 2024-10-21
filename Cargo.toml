@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.86"
+pretty = "0.12.3"
 tree-sitter = "0.22.6"
