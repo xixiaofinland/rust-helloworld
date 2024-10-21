@@ -1,4 +1,4 @@
-use pretty::Arena;
+use pretty::{Arena, Pretty};
 use pretty::{BoxAllocator, DocAllocator, DocBuilder};
 use std::io;
 use std::str;
@@ -149,4 +149,19 @@ pub fn main() {
     //println!("\n\nWidth 20:");
     //println!("Function example:");
     //doc.render(20, &mut io::stdout()).unwrap();
+}
+
+fn format_elements<'a, D>(allocator: &'a D, elements: Vec<D::Doc>) -> D::Doc
+where
+    D: DocAllocator<'a>,
+    D::Doc: Pretty<'a, D>,
+{
+    let mut doc = allocator.nil();
+    for (i, elem) in elements.into_iter().enumerate() {
+        doc = doc.append(elem);
+        if i < elements.len() - 1 {
+            doc = doc.append(allocator.text(",")).append(allocator.softline());
+        }
+    }
+    doc
 }
